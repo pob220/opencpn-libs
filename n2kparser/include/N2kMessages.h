@@ -484,7 +484,6 @@ inline bool ParseN2kEngineParamRapid(const tN2kMsg &N2kMsg,
                            EngineBoostPressure, EngineTiltTrim);
 }
 
-#if 0  // DSR
 //*****************************************************************************
 // Engine parameters dynamic
 // Input:
@@ -499,132 +498,55 @@ inline bool ParseN2kEngineParamRapid(const tN2kMsg &N2kMsg,
 //  - EngineFuelPress       in Pascal
 //  - EngineLoad            in %
 //  - EngineTorque          in %
+//  - DiscreteStatus1       Engine Discrete Status 1, raw 16-bit bitfield
+//  - DiscreteStatus2       Engine Discrete Status 2, raw 16-bit bitfield
 // Output:
 //  - N2kMsg                NMEA2000 message ready to be send.
-void SetN2kPGN127489(tN2kMsg &N2kMsg, unsigned char EngineInstance, double EngineOilPress, double EngineOilTemp, double EngineCoolantTemp, double AltenatorVoltage,
-                       double FuelRate, double EngineHours, double EngineCoolantPress=N2kDoubleNA, double EngineFuelPress=N2kDoubleNA,
-                       int8_t EngineLoad=N2kInt8NA, int8_t EngineTorque=N2kInt8NA,
-                       tN2kEngineDiscreteStatus1 Status1=0, tN2kEngineDiscreteStatus2 Status2=0);
+void SetN2kPGN127489(tN2kMsg &N2kMsg, unsigned char EngineInstance,
+                     double EngineOilPress, double EngineOilTemp,
+                     double EngineCoolantTemp, double AltenatorVoltage,
+                     double FuelRate, double EngineHours,
+                     double EngineCoolantPress = N2kDoubleNA,
+                     double EngineFuelPress = N2kDoubleNA,
+                     int8_t EngineLoad = N2kInt8NA,
+                     int8_t EngineTorque = N2kInt8NA,
+                     uint16_t DiscreteStatus1 = 0, uint16_t DiscreteStatus2 = 0);
 
-inline void SetN2kEngineDynamicParam(tN2kMsg &N2kMsg, unsigned char EngineInstance, double EngineOilPress, double EngineOilTemp, double EngineCoolantTemp, double AltenatorVoltage,
-                       double FuelRate, double EngineHours, double EngineCoolantPress=N2kDoubleNA, double EngineFuelPress=N2kDoubleNA,
-                       int8_t EngineLoad=N2kInt8NA, int8_t EngineTorque=N2kInt8NA,
-                       tN2kEngineDiscreteStatus1 Status1=0, tN2kEngineDiscreteStatus2 Status2=0) {
-  SetN2kPGN127489(N2kMsg,EngineInstance, EngineOilPress, EngineOilTemp, EngineCoolantTemp, AltenatorVoltage,
-                       FuelRate, EngineHours, EngineCoolantPress, EngineFuelPress, EngineLoad, EngineTorque,
-                       Status1,Status2);
+inline void SetN2kEngineDynamicParam(
+    tN2kMsg &N2kMsg, unsigned char EngineInstance, double EngineOilPress,
+    double EngineOilTemp, double EngineCoolantTemp, double AltenatorVoltage,
+    double FuelRate, double EngineHours,
+    double EngineCoolantPress = N2kDoubleNA,
+    double EngineFuelPress = N2kDoubleNA, int8_t EngineLoad = N2kInt8NA,
+    int8_t EngineTorque = N2kInt8NA, uint16_t DiscreteStatus1 = 0,
+    uint16_t DiscreteStatus2 = 0) {
+  SetN2kPGN127489(N2kMsg, EngineInstance, EngineOilPress, EngineOilTemp,
+                  EngineCoolantTemp, AltenatorVoltage, FuelRate, EngineHours,
+                  EngineCoolantPress, EngineFuelPress, EngineLoad, EngineTorque,
+                  DiscreteStatus1, DiscreteStatus2);
 }
 
-inline void SetN2kPGN127489(tN2kMsg &N2kMsg, unsigned char EngineInstance, double EngineOilPress, double EngineOilTemp, double EngineCoolantTemp, double AltenatorVoltage,
-                       double FuelRate, double EngineHours, double EngineCoolantPress=N2kDoubleNA, double EngineFuelPress=N2kDoubleNA,
-                       int8_t EngineLoad=N2kInt8NA, int8_t EngineTorque=N2kInt8NA,
-                       bool flagCheckEngine=false,       bool flagOverTemp=false,         bool flagLowOilPress=false,         bool flagLowOilLevel=false,
-                       bool flagLowFuelPress=false,      bool flagLowSystemVoltage=false, bool flagLowCoolantLevel=false,     bool flagWaterFlow=false,
-                       bool flagWaterInFuel=false,       bool flagChargeIndicator=false,  bool flagPreheatIndicator=false,    bool flagHighBoostPress=false,
-                       bool flagRevLimitExceeded=false,  bool flagEgrSystem=false,        bool flagTPS=false,                 bool flagEmergencyStopMode=false,
-                       bool flagWarning1=false,          bool flagWarning2=false,         bool flagPowerReduction=false,      bool flagMaintenanceNeeded=false,
-                       bool flagEngineCommError=false,   bool flagSubThrottle=false,      bool flagNeutralStartProtect=false, bool flagEngineShuttingDown=false) {
-  tN2kEngineDiscreteStatus1 Status1;
-  tN2kEngineDiscreteStatus2 Status2;
-  Status1.Bits.CheckEngine=flagCheckEngine;
-  Status1.Bits.OverTemperature=flagOverTemp;
-  Status1.Bits.LowOilPressure=flagLowOilPress;
-  Status1.Bits.LowOilLevel=flagLowOilLevel;
-  Status1.Bits.LowFuelPressure=flagLowFuelPress;
-  Status1.Bits.LowSystemVoltage=flagLowSystemVoltage;
-  Status1.Bits.LowCoolantLevel=flagLowCoolantLevel;
-  Status1.Bits.WaterFlow=flagWaterFlow;
-  Status1.Bits.WaterInFuel=flagWaterInFuel;
-  Status1.Bits.ChargeIndicator=flagChargeIndicator;
-  Status1.Bits.PreheatIndicator=flagPreheatIndicator;
-  Status1.Bits.HighBoostPressure=flagHighBoostPress;
-  Status1.Bits.RevLimitExceeded=flagRevLimitExceeded;
-  Status1.Bits.EGRSystem=flagEgrSystem;
-  Status1.Bits.ThrottlePositionSensor=flagTPS;
-  Status1.Bits.EngineEmergencyStopMode=flagEmergencyStopMode;
-  Status2.Bits.WarningLevel1=flagWarning1;
-  Status2.Bits.WarningLevel2=flagWarning2;
-  Status2.Bits.LowOiPowerReduction=flagPowerReduction;
-  Status2.Bits.MaintenanceNeeded=flagMaintenanceNeeded;
-  Status2.Bits.EngineCommError=flagEngineCommError;
-  Status2.Bits.SubOrSecondaryThrottle=flagSubThrottle;
-  Status2.Bits.NeutralStartProtect=flagNeutralStartProtect;
-  Status2.Bits.EngineShuttingDown=flagEngineShuttingDown;
+bool ParseN2kPGN127489(const tN2kMsg &N2kMsg, unsigned char &EngineInstance,
+                       double &EngineOilPress, double &EngineOilTemp,
+                       double &EngineCoolantTemp, double &AltenatorVoltage,
+                       double &FuelRate, double &EngineHours,
+                       double &EngineCoolantPress, double &EngineFuelPress,
+                       int8_t &EngineLoad, int8_t &EngineTorque,
+                       uint16_t &DiscreteStatus1, uint16_t &DiscreteStatus2);
 
-  SetN2kPGN127489(N2kMsg,EngineInstance, EngineOilPress, EngineOilTemp, EngineCoolantTemp, AltenatorVoltage,
-                       FuelRate, EngineHours, EngineCoolantPress, EngineFuelPress, EngineLoad, EngineTorque,
-                       Status1,Status2);
-}
-inline void SetN2kEngineDynamicParam(tN2kMsg &N2kMsg, unsigned char EngineInstance, double EngineOilPress, double EngineOilTemp, double EngineCoolantTemp, double AltenatorVoltage,
-                       double FuelRate, double EngineHours, double EngineCoolantPress=N2kDoubleNA, double EngineFuelPress=N2kDoubleNA,
-                       int8_t EngineLoad=N2kInt8NA, int8_t EngineTorque=N2kInt8NA,
-                       bool flagCheckEngine=false,       bool flagOverTemp=false,         bool flagLowOilPress=false,         bool flagLowOilLevel=false,
-                       bool flagLowFuelPress=false,      bool flagLowSystemVoltage=false, bool flagLowCoolantLevel=false,     bool flagWaterFlow=false,
-                       bool flagWaterInFuel=false,       bool flagChargeIndicator=false,  bool flagPreheatIndicator=false,    bool flagHighBoostPress=false,
-                       bool flagRevLimitExceeded=false,  bool flagEgrSystem=false,        bool flagTPS=false,                 bool flagEmergencyStopMode=false,
-                       bool flagWarning1=false,          bool flagWarning2=false,         bool flagPowerReduction=false,      bool flagMaintenanceNeeded=false,
-                       bool flagEngineCommError=false,   bool flagSubThrottle=false,      bool flagNeutralStartProtect=false, bool flagEngineShuttingDown=false) {
-  SetN2kPGN127489(N2kMsg,EngineInstance, EngineOilPress, EngineOilTemp, EngineCoolantTemp, AltenatorVoltage,
-                       FuelRate, EngineHours, EngineCoolantPress, EngineFuelPress, EngineLoad, EngineTorque,
-                       flagCheckEngine, flagOverTemp, flagLowOilPress, flagLowOilLevel,
-                       flagLowFuelPress, flagLowSystemVoltage, flagLowCoolantLevel, flagWaterFlow,
-                       flagWaterInFuel, flagChargeIndicator, flagPreheatIndicator, flagHighBoostPress,
-                       flagRevLimitExceeded, flagEgrSystem, flagTPS, flagEmergencyStopMode,
-                       flagWarning1, flagWarning2, flagPowerReduction, flagMaintenanceNeeded,
-                       flagEngineCommError, flagSubThrottle, flagNeutralStartProtect, flagEngineShuttingDown);
-}
-
-bool ParseN2kPGN127489(const tN2kMsg &N2kMsg, unsigned char &EngineInstance, double &EngineOilPress,
-                      double &EngineOilTemp, double &EngineCoolantTemp, double &AltenatorVoltage,
-                      double &FuelRate, double &EngineHours, double &EngineCoolantPress, double &EngineFuelPress,
-                      int8_t &EngineLoad, int8_t &EngineTorque,
-                      tN2kEngineDiscreteStatus1 &Status1, tN2kEngineDiscreteStatus2 &Status2);
-
-inline bool ParseN2kPGN127489(const tN2kMsg &N2kMsg, unsigned char &EngineInstance, double &EngineOilPress,
-                      double &EngineOilTemp, double &EngineCoolantTemp, double &AltenatorVoltage,
-                      double &FuelRate, double &EngineHours, double &EngineCoolantPress, double &EngineFuelPress,
-                      int8_t &EngineLoad, int8_t &EngineTorque) {
-  tN2kEngineDiscreteStatus1 Status1;
-  tN2kEngineDiscreteStatus2 Status2;
+inline bool ParseN2kEngineDynamicParam(
+    const tN2kMsg &N2kMsg, unsigned char &EngineInstance,
+    double &EngineOilPress, double &EngineOilTemp, double &EngineCoolantTemp,
+    double &AltenatorVoltage, double &FuelRate, double &EngineHours,
+    double &EngineCoolantPress, double &EngineFuelPress, int8_t &EngineLoad,
+    int8_t &EngineTorque, uint16_t &DiscreteStatus1,
+    uint16_t &DiscreteStatus2) {
   return ParseN2kPGN127489(N2kMsg, EngineInstance, EngineOilPress,
-                    EngineOilTemp, EngineCoolantTemp, AltenatorVoltage,
-                    FuelRate, EngineHours,EngineCoolantPress, EngineFuelPress,
-                    EngineLoad, EngineTorque,Status1,Status2);
+                           EngineOilTemp, EngineCoolantTemp, AltenatorVoltage,
+                           FuelRate, EngineHours, EngineCoolantPress,
+                           EngineFuelPress, EngineLoad, EngineTorque,
+                           DiscreteStatus1, DiscreteStatus2);
 }
-
-inline bool ParseN2kEngineDynamicParam(const tN2kMsg &N2kMsg, unsigned char &EngineInstance, double &EngineOilPress,
-                      double &EngineOilTemp, double &EngineCoolantTemp, double &AltenatorVoltage,
-                      double &FuelRate, double &EngineHours, double &EngineCoolantPress, double &EngineFuelPress,
-                      int8_t &EngineLoad, int8_t &EngineTorque) {
-    return ParseN2kPGN127489(N2kMsg, EngineInstance, EngineOilPress,
-                      EngineOilTemp, EngineCoolantTemp, AltenatorVoltage,
-                      FuelRate, EngineHours,EngineCoolantPress, EngineFuelPress,
-                      EngineLoad, EngineTorque);
-}
-inline bool ParseN2kEngineDynamicParam(const tN2kMsg &N2kMsg, unsigned char &EngineInstance, double &EngineOilPress,
-                      double &EngineOilTemp, double &EngineCoolantTemp, double &AltenatorVoltage,
-                      double &FuelRate, double &EngineHours, double &EngineCoolantPress, double &EngineFuelPress,
-                      int8_t &EngineLoad, int8_t &EngineTorque,
-                      tN2kEngineDiscreteStatus1 &Status1, tN2kEngineDiscreteStatus2 &Status2) {
-    return ParseN2kPGN127489(N2kMsg, EngineInstance, EngineOilPress,
-                      EngineOilTemp, EngineCoolantTemp, AltenatorVoltage,
-                      FuelRate, EngineHours,EngineCoolantPress, EngineFuelPress,
-                      EngineLoad, EngineTorque,
-                      Status1, Status2);
-}
-inline bool ParseN2kEngineDynamicParam(const tN2kMsg &N2kMsg, unsigned char &EngineInstance, double &EngineOilPress,
-                      double &EngineOilTemp, double &EngineCoolantTemp, double &AltenatorVoltage,
-                      double &FuelRate, double &EngineHours) {
-    double EngineCoolantPress, EngineFuelPress;
-    int8_t EngineLoad, EngineTorque;
-    tN2kEngineDiscreteStatus1 Status1;
-    tN2kEngineDiscreteStatus2 Status2;
-    return ParseN2kPGN127489(N2kMsg, EngineInstance, EngineOilPress,
-                      EngineOilTemp, EngineCoolantTemp, AltenatorVoltage,
-                      FuelRate, EngineHours,EngineCoolantPress, EngineFuelPress,
-                      EngineLoad, EngineTorque,Status1,Status2);
-}
-#endif
 //*****************************************************************************
 // Transmission parameters, dynamic
 // Input:

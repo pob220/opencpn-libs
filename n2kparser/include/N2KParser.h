@@ -494,7 +494,6 @@ bool ParseN2kPGN127488(std::vector<unsigned char> &v,
                        unsigned char &EngineInstance, double &EngineSpeed,
                        double &EngineBoostPressure, int8_t &EngineTiltTrim);
 
-#if 0
 //*****************************************************************************
 // Engine parameters dynamic
 // Input:
@@ -509,12 +508,16 @@ bool ParseN2kPGN127488(std::vector<unsigned char> &v,
 //  - EngineFuelPress       in Pascal
 //  - EngineLoad            in %
 //  - EngineTorque          in %
-bool ParseN2kPGN127489(std::vector<unsigned char> &v, unsigned char &EngineInstance, double &EngineOilPress,
-                      double &EngineOilTemp, double &EngineCoolantTemp, double &AltenatorVoltage,
-                      double &FuelRate, double &EngineHours, double &EngineCoolantPress, double &EngineFuelPress,
-                      int8_t &EngineLoad, int8_t &EngineTorque,
-                      tN2kEngineDiscreteStatus1 &Status1, tN2kEngineDiscreteStatus2 &Status2);
-#endif
+//  - DiscreteStatus1       Engine Discrete Status 1, raw 16-bit bitfield
+//  - DiscreteStatus2       Engine Discrete Status 2, raw 16-bit bitfield
+bool ParseN2kPGN127489(std::vector<unsigned char> &v,
+                       unsigned char &EngineInstance, double &EngineOilPress,
+                       double &EngineOilTemp, double &EngineCoolantTemp,
+                       double &AltenatorVoltage, double &FuelRate,
+                       double &EngineHours, double &EngineCoolantPress,
+                       double &EngineFuelPress, int8_t &EngineLoad,
+                       int8_t &EngineTorque, uint16_t &DiscreteStatus1,
+                       uint16_t &DiscreteStatus2);
 
 //*****************************************************************************
 // Transmission parameters, dynamic

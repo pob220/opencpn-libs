@@ -293,6 +293,68 @@ bool ParseN2kPGN130313(std::vector<unsigned char> &v, unsigned char &SID,
                            ActualHumidity, SetHumidity);
 }
 
+// Engine parameters, rapid update (PGN 127488): RPM, boost pressure, tilt/trim
+bool ParseN2kPGN127488(std::vector<unsigned char> &v,
+                       unsigned char &EngineInstance, double &EngineSpeed,
+                       double &EngineBoostPressure, int8_t &EngineTiltTrim) {
+  tN2kMsg msg = MakeN2kMsg(v);
+
+  return ParseN2kPGN127488(msg, EngineInstance, EngineSpeed,
+                           EngineBoostPressure, EngineTiltTrim);
+}
+
+// Engine parameters, dynamic (PGN 127489): oil/coolant/fuel/voltage/hours plus
+// the two discrete status (warning/alarm) words, exposed as raw 16-bit
+// bitfields.
+bool ParseN2kPGN127489(std::vector<unsigned char> &v,
+                       unsigned char &EngineInstance, double &EngineOilPress,
+                       double &EngineOilTemp, double &EngineCoolantTemp,
+                       double &AltenatorVoltage, double &FuelRate,
+                       double &EngineHours, double &EngineCoolantPress,
+                       double &EngineFuelPress, int8_t &EngineLoad,
+                       int8_t &EngineTorque, uint16_t &DiscreteStatus1,
+                       uint16_t &DiscreteStatus2) {
+  tN2kMsg msg = MakeN2kMsg(v);
+
+  return ParseN2kPGN127489(msg, EngineInstance, EngineOilPress, EngineOilTemp,
+                           EngineCoolantTemp, AltenatorVoltage, FuelRate,
+                           EngineHours, EngineCoolantPress, EngineFuelPress,
+                           EngineLoad, EngineTorque, DiscreteStatus1,
+                           DiscreteStatus2);
+}
+
+// Transmission parameters, dynamic (PGN 127493): gear, oil pressure/temp
+bool ParseN2kPGN127493(std::vector<unsigned char> &v,
+                       unsigned char &EngineInstance,
+                       tN2kTransmissionGear &TransmissionGear,
+                       double &OilPressure, double &OilTemperature,
+                       unsigned char &DiscreteStatus1) {
+  tN2kMsg msg = MakeN2kMsg(v);
+
+  return ParseN2kPGN127493(msg, EngineInstance, TransmissionGear, OilPressure,
+                           OilTemperature, DiscreteStatus1);
+}
+
+// Fluid level (PGN 127505): tank type, level %, capacity (fuel/oil/water tanks)
+bool ParseN2kPGN127505(std::vector<unsigned char> &v, unsigned char &Instance,
+                       tN2kFluidType &FluidType, double &Level,
+                       double &Capacity) {
+  tN2kMsg msg = MakeN2kMsg(v);
+
+  return ParseN2kPGN127505(msg, Instance, FluidType, Level, Capacity);
+}
+
+// Battery status (PGN 127508): voltage, current, temperature
+bool ParseN2kPGN127508(std::vector<unsigned char> &v,
+                       unsigned char &BatteryInstance, double &BatteryVoltage,
+                       double &BatteryCurrent, double &BatteryTemperature,
+                       unsigned char &SID) {
+  tN2kMsg msg = MakeN2kMsg(v);
+
+  return ParseN2kPGN127508(msg, BatteryInstance, BatteryVoltage,
+                           BatteryCurrent, BatteryTemperature, SID);
+}
+
 
 
 

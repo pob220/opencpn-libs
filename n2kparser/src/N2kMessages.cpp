@@ -392,14 +392,17 @@ bool ParseN2kPGN127488(const tN2kMsg &N2kMsg, unsigned char &EngineInstance,
   return true;
 }
 
-#if 0  // DSR
 //*****************************************************************************
 // Engine parameters dynamic
-void SetN2kPGN127489(tN2kMsg &N2kMsg, unsigned char EngineInstance, double EngineOilPress, double EngineOilTemp, double EngineCoolantTemp, double AltenatorVoltage,
-                       double FuelRate, double EngineHours, double EngineCoolantPress, double EngineFuelPress, int8_t EngineLoad, int8_t EngineTorque,
-                       tN2kEngineDiscreteStatus1 Status1, tN2kEngineDiscreteStatus2 Status2) {
-    N2kMsg.SetPGN(127489L);
-    N2kMsg.Priority=2;
+void SetN2kPGN127489(tN2kMsg &N2kMsg, unsigned char EngineInstance,
+                     double EngineOilPress, double EngineOilTemp,
+                     double EngineCoolantTemp, double AltenatorVoltage,
+                     double FuelRate, double EngineHours,
+                     double EngineCoolantPress, double EngineFuelPress,
+                     int8_t EngineLoad, int8_t EngineTorque,
+                     uint16_t DiscreteStatus1, uint16_t DiscreteStatus2) {
+  N2kMsg.SetPGN(127489L);
+  N2kMsg.Priority = 2;
 
   N2kMsg.AddByte(EngineInstance);
   N2kMsg.Add2ByteUDouble(EngineOilPress, 100);
@@ -411,41 +414,40 @@ void SetN2kPGN127489(tN2kMsg &N2kMsg, unsigned char EngineInstance, double Engin
   N2kMsg.Add2ByteUDouble(EngineCoolantPress, 100);
   N2kMsg.Add2ByteUDouble(EngineFuelPress, 1000);
   N2kMsg.AddByte(0xff);  // reserved
-
-  N2kMsg.Add2ByteUInt(Status1.Status); // Discrete Status 1
-  N2kMsg.Add2ByteUInt(Status2.Status);  // Discrete Status 2
-
+  N2kMsg.Add2ByteUInt(DiscreteStatus1);  // Discrete Status 1
+  N2kMsg.Add2ByteUInt(DiscreteStatus2);  // Discrete Status 2
   N2kMsg.AddByte(EngineLoad);
   N2kMsg.AddByte(EngineTorque);
 }
-bool ParseN2kPGN127489(const tN2kMsg &N2kMsg, unsigned char &EngineInstance, double &EngineOilPress,
-                      double &EngineOilTemp, double &EngineCoolantTemp, double &AltenatorVoltage,
-                      double &FuelRate, double &EngineHours, double &EngineCoolantPress, double &EngineFuelPress,
-                      int8_t &EngineLoad, int8_t &EngineTorque,
-                      tN2kEngineDiscreteStatus1 &Status1, tN2kEngineDiscreteStatus2 &Status2) {
+
+bool ParseN2kPGN127489(const tN2kMsg &N2kMsg, unsigned char &EngineInstance,
+                       double &EngineOilPress, double &EngineOilTemp,
+                       double &EngineCoolantTemp, double &AltenatorVoltage,
+                       double &FuelRate, double &EngineHours,
+                       double &EngineCoolantPress, double &EngineFuelPress,
+                       int8_t &EngineLoad, int8_t &EngineTorque,
+                       uint16_t &DiscreteStatus1, uint16_t &DiscreteStatus2) {
   if (N2kMsg.PGN != 127489L) return false;
 
   int Index = 0;
 
   EngineInstance = N2kMsg.GetByte(Index);
   EngineOilPress = N2kMsg.Get2ByteUDouble(100, Index);
-  EngineOilTemp  = N2kMsg.Get2ByteUDouble(0.1, Index);
+  EngineOilTemp = N2kMsg.Get2ByteUDouble(0.1, Index);
   EngineCoolantTemp = N2kMsg.Get2ByteUDouble(0.01, Index);
   AltenatorVoltage = N2kMsg.Get2ByteDouble(0.01, Index);
-  FuelRate =  N2kMsg.Get2ByteDouble(0.1, Index);
+  FuelRate = N2kMsg.Get2ByteDouble(0.1, Index);
   EngineHours = N2kMsg.Get4ByteUDouble(1, Index);
-  EngineCoolantPress=N2kMsg.Get2ByteUDouble(100, Index);
-  EngineFuelPress=N2kMsg.Get2ByteUDouble(1000, Index);
+  EngineCoolantPress = N2kMsg.Get2ByteUDouble(100, Index);
+  EngineFuelPress = N2kMsg.Get2ByteUDouble(1000, Index);
   N2kMsg.GetByte(Index);  // reserved
-  Status1=N2kMsg.Get2ByteUInt(Index);  // Discrete Status 1
-  Status2=N2kMsg.Get2ByteUInt(Index);  // Discrete Status 2
-  EngineLoad=N2kMsg.GetByte(Index);
-  EngineTorque=N2kMsg.GetByte(Index);
+  DiscreteStatus1 = N2kMsg.Get2ByteUInt(Index);  // Discrete Status 1
+  DiscreteStatus2 = N2kMsg.Get2ByteUInt(Index);  // Discrete Status 2
+  EngineLoad = N2kMsg.GetByte(Index);
+  EngineTorque = N2kMsg.GetByte(Index);
 
   return true;
 }
-
-#endif
 
 //*****************************************************************************
 // Transmission parameters, dynamic
